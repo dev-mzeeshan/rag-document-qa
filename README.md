@@ -4,19 +4,27 @@
 > powered by LangChain, FAISS, and LLMs.
 
 ## Live Demo
-🚀 [Try it here](https://your-streamlit-link.streamlit.app)
+🚀 [Try it here](https://rag-document-app-zee.streamlit.app)
 
 ## What It Does
 Upload any PDF document and ask questions in plain English.
 The system uses Retrieval-Augmented Generation to find 
 relevant sections and generate accurate answers.
 
-## Tech Stack
-- **LangChain** — LLM orchestration framework
-- **FAISS** — Vector similarity search (Facebook AI)
-- **OpenAI / Groq** — Language model for answer generation
-- **Streamlit** — Web interface
-- **PyPDF** — PDF parsing
+An intelligent PDF assistant that uses **Retrieval-Augmented Generation (RAG)** to provide accurate answers from your documents. 
+
+## 🌟 Features
+- **Lightning Fast:** Powered by Groq (Llama-3.3-70B model).
+- **Free Embeddings:** Uses HuggingFace `all-MiniLM-L6-v2` (runs locally).
+- **Smart Retrieval:** Uses FAISS for efficient similarity search.
+- **Modern UI:** Clean and interactive Streamlit interface.
+
+## 🛠️ Tech Stack
+- **Orchestration:** LangChain 0.3
+- **LLM:** Groq (Llama 3.3)
+- **Vector DB:** FAISS
+- **Embeddings:** HuggingFace Transformers
+- **Frontend:** Streamlit
 
 ## How It Works
 1. PDF is loaded and split into overlapping chunks
@@ -36,6 +44,7 @@ streamlit run app/main.py
 ```
 
 ## Author
-**Muhammad Zeeshan** — AI Engineer  
+**Muhammad Zeeshan** 
+AI Engineer  
 [Portfolio](https://zeeshan-portfolio-amber.vercel.app) · 
 [LinkedIn](https://linkedin.com/in/zeeshanofficial)
