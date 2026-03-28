@@ -1,7 +1,6 @@
 # 🔍 RAG Document Question Answering System
 
-> Ask questions about any PDF using natural language
- 
+> Ask questions about any PDF using natural language 
 > powered by LangChain, FAISS, and LLMs.
 
 ## Live Demo
