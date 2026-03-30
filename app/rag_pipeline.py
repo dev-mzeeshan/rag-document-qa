@@ -2,7 +2,8 @@
 # Core logic for the RAG pipeline using Groq and HuggingFace Embeddings.
 
 import os
-from langchain_community.document_loaders import PyPDFLoader
+# from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFium2Loader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings # Free alternative to OpenAI Embeddings
@@ -15,7 +16,8 @@ def load_and_split_pdf(pdf_path: str):
     """
     Loads a PDF document and splits it into smaller chunks for efficient processing.
     """
-    loader = PyPDFLoader(pdf_path)
+    # loader = PyPDFLoader(pdf_path)
+    loader = PyPDFium2Loader(pdf_path)
     documents = loader.load()
     
     splitter = RecursiveCharacterTextSplitter(
