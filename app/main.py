@@ -85,12 +85,14 @@ if uploaded_file:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
                 tmp.write(uploaded_file.getvalue())
                 tmp_path = tmp.name
-            
+
             try:
                 st.write("Splitting into semantic chunks...")
                 chunks = load_and_split_pdf(tmp_path)
                 
                 st.write("Generating Vector Embeddings (HuggingFace)...")
+                
+                # ValueError will now be handled gracefully
                 vector_store = create_vector_store(chunks)
                 
                 st.write("Connecting to Groq Engine...")
@@ -100,8 +102,19 @@ if uploaded_file:
                 
                 status.update(label="✅ Document Ready!", state="complete", expanded=False)
                 st.toast("Document processed successfully!", icon="🔥")
+
+            except ValueError as e:
+                # Case for image-based PDF or documents with no text
+                status.update(label="❌ Could not process document", state="error")
+                st.error(f"⚠️ {str(e)}")
+                
+            except Exception as e:
+                status.update(label="❌ Unexpected error", state="error")
+                st.error(f"Something went wrong: {str(e)}")
+                
             finally:
-                if os.path.exists(tmp_path): os.unlink(tmp_path)
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
 
 # --- CHAT INTERFACE ---
 for message in st.session_state.messages:

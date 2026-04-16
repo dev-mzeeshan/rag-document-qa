@@ -34,20 +34,38 @@ def load_and_split_pdf(pdf_path: str):
 
 def create_vector_store(chunks):
     """
-    Transforms text chunks into vector embeddings and stores them in a local index.
+    Convert text chunks into embeddings and store them in FAISS.
     
-    Args:
-        chunks (list): The list of text segments to be embedded.
-        
-    Returns:
-        FAISS: A searchable vector database instance.
+    Important: Filter out empty chunks first—these typically occur when PDF 
+    pages are image-only and text cannot be extracted. 
+    Empty chunks cause an IndexError in FAISS.
     """
-    # Using 'all-MiniLM-L6-v2' provides a cost-effective and efficient way to generate 
-    # embeddings locally on the CPU while maintaining high retrieval accuracy.
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     
-    # Initialize FAISS, a robust library for efficient similarity search of dense vectors.
-    vector_store = FAISS.from_documents(chunks, embeddings)
+    # Guard: remove empty or very small chunks
+    # Chunks shorter than 20 characters are usually not meaningful
+    valid_chunks = [
+        chunk for chunk in chunks 
+        if chunk.page_content and len(chunk.page_content.strip()) > 20
+    ]
+    
+    # If all chunks are empty, raise a meaningful error
+    if not valid_chunks:
+        raise ValueError(
+            "No readable text found in this PDF. "
+            "The document may be image-based or scanned. "
+            "Please try a text-based PDF."
+        )
+    
+    # Count how many chunks were filtered useful for debugging
+    filtered_count = len(chunks) - len(valid_chunks)
+    if filtered_count > 0:
+        print(f"Note: {filtered_count} empty chunks filtered out of {len(chunks)} total.")
+    
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+    
+    vector_store = FAISS.from_documents(valid_chunks, embeddings)
     return vector_store
 
 def create_qa_chain(vector_store):
